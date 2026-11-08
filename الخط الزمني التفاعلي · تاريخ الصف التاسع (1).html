@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الخط الزمني التفاعلي · تاريخ الصف التاسع</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;--bg:#fbf8f2;--ink:#1f2933;--card:#fff;--sea:#cfe3ee;--land:#eadfc8;--line:#c9bfa9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14171c;--ink:#e6e1d6;--card:#1d2229;--sea:#16303f;--land:#2b2a26;--line:#3a3f47}}
+:root[data-theme=dark]{--bg:#14171c;--ink:#e6e1d6;--card:#1d2229;--sea:#16303f;--land:#2b2a26;--line:#3a3f47}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma,sans-serif;line-height:1.7}
+header,main{max-width:1100px;margin:auto;padding:12px 16px 0}
+h1{margin:0;font-size:1.4rem}
+.s{margin:2px 0 0;opacity:.7;font-size:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{border:2px solid var(--c);background:transparent;color:var(--ink);border-radius:99px;padding:2px 12px;font:inherit;font-size:.85rem;cursor:pointer}
+.chip.on{background:var(--c);color:#fff}
+.map{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--sea)}
+svg{display:block;width:100%;height:auto;direction:ltr}
+.land{fill:var(--land)}.sea{fill:var(--sea);stroke:var(--line);stroke-width:.8}
+.m{cursor:pointer}.m circle{stroke:#fff;stroke-width:1.5}
+.ring{fill:none;stroke-width:2.5;animation:p 1.4s infinite}
+@keyframes p{0%{r:7;opacity:1}100%{r:20;opacity:0}}
+.lbl{font-size:14px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:4px}
+.sl{font-size:11px;fill:var(--ink);opacity:.45}
+.tl{display:flex;overflow-x:auto;padding:14px 4px 8px;margin-top:10px;scrollbar-width:thin}
+.n{flex:0 0 96px;border:0;background:none;color:var(--ink);font:inherit;cursor:pointer;text-align:center;padding:0 4px}
+.n b{display:block;font-size:.85rem}
+.n i{display:block;height:14px;margin:4px 0;position:relative}
+.n i::before{content:"";position:absolute;top:6px;inset-inline:0;height:2px;background:var(--line)}
+.n i::after{content:"";position:absolute;top:0;left:calc(50% - 7px);width:14px;height:14px;border-radius:50%;background:var(--c);border:2px solid var(--bg)}
+.n span{display:block;font-size:.75rem;opacity:.8}
+.n.sel i::after{transform:scale(1.5)}.n.sel b,.n.sel span{font-weight:700;opacity:1}
+#card{background:var(--card);border:1px solid var(--line);border-inline-start:6px solid var(--c);border-radius:12px;padding:12px 16px;margin-top:10px}
+#card .t{font-size:1.2rem;font-weight:700}#card .y{font-size:.85rem;opacity:.7}#card p{margin:4px 0 0}
+.ctl{display:flex;gap:8px;margin:10px 0}
+.ctl button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.rt{fill:none;stroke-linecap:round}
+.rf{stroke:var(--ink);stroke-width:1.2;stroke-dasharray:4 4;opacity:.4}
+.rh{stroke:#e11d48;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;animation:d .9s forwards}
+.rx{stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;animation:d 1.2s forwards}
+@keyframes d{to{stroke-dashoffset:0}}
+.wp{font-size:12px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:3px}
+.pill{display:inline-block;margin:2px 0 2px 4px;padding:0 10px;border-radius:99px;background:var(--bg);border:1px solid var(--line);font-size:.85rem}
+.k{font-size:.8rem;opacity:.7;margin-top:6px}
+.dir{margin-top:8px;font-size:.9rem;padding:6px 10px;border-radius:8px;background:var(--bg);border:1px dashed #e11d48}
+.f{font-size:.75rem;opacity:.6;padding-bottom:16px}
+</style>
+</head>
+<body>
+<header>
+<h1>الخط الزمني التفاعلي · تاريخ الصف التاسع</h1>
+<p class="s">من وفاة النبي ﷺ إلى تحرير اليمن ١٠٤٥هـ — اضغط على نقطة في الخريطة أو الخط الزمني</p>
+</header>
+<main>
+<div class="chips" id="chips"></div>
+<div class="map" id="map"></div>
+<div class="tl" id="tl"></div>
+<div id="card"></div>
+<div class="ctl"><button id="pv">→ السابق</button><button id="pl">▶ تشغيل تلقائي</button><button id="ra">المسار العام: تشغيل</button><button id="nx">التالي ←</button></div>
+<p class="f">الخريطة تخطيطية تقريبية لأغراض المراجعة. المصدر: ملزمة التاريخ الوزارية الشاملة، الصف التاسع.</p>
+</main>
+<script>
+const G={r:['الخلفاء الراشدون','#2f855a'],u:['الأموية','#c05621'],a:['العباسية والدول المستقلة','#3b6fd4'],s:['الصليبيون والمغول','#9b4dca'],y:['اليمن والعثمانيون','#b7791f']};
+const E=[
+['r',11,'وفاة النبي ﷺ وحروب الردة',39.6,24.5,'تولى أبو بكر؛ حروب الردة ضد مسيلمة وسجاح، وحروب الزكاة.'],
+['r',13,'معركة اليرموك',35.9,32.8,'نصر على الروم وفتح الشام، ووفاة أبي بكر.'],
+['r',14,'معركة القادسية',44.2,31.6,'نصر على الفرس في العراق زمن عمر.'],
+['r',34,'ذات الصواري',31,35.8,'انتصار الأسطول الإسلامي على البيزنطيين والسيطرة على شرق المتوسط.'],
+['r',37,'صفين',39,35.9,'رفع المصاحف، واستشهاد عمار بن ياسر، وظهور الخوارج.'],
+['r',40,'استشهاد الإمام علي',44.4,32.1,'ضربه ابن ملجم في مسجد الكوفة، واستشهد ليلة ٢١ رمضان.'],
+['u',41,'قيام الدولة الأموية',36.3,33.5,'بداية الحكم الوراثي بقيادة معاوية.'],
+['u',61,'كربلاء',44,32.6,'استشهاد الإمام الحسين في ١٠ محرم زمن يزيد.'],
+['u',73,'حصار مكة',39.8,21.4,'حملة الحجاج ستة أشهر وضرب الكعبة بالمنجنيق.'],
+['u',122,'ثورة زيد بن علي',44.6,31.8,'حليف القرآن ثار على هشام، فاستشهد وصُلب.'],
+['a',132,'قيام الدولة العباسية',59.5,36.3,'انطلقت الدعوة من خراسان بشعار «الرضا من آل محمد».'],
+['a',145,'ثورة النفس الزكية',39.9,24.8,'خرج بالمدينة داعيًا إلى الكتاب والسنة وإقامة العدل.'],
+['a',169,'مأساة فخ',39.7,21.2,'«كربلاء الثانية»: قتل الأسرى وتعليق الجثث يوم عرفة.'],
+['a',172,'دولة الأدارسة',-5,34,'إدريس بن عبد الله يؤسس دولة بالمغرب عاصمتها فاس.'],
+['a',284,'دولة الهادي إلى الحق',43.7,16.9,'بيعة العدل: الطاعة مشروطة بالالتزام بالكتاب والسنة، وعاصمتها صعدة.'],
+['a',301,'الناصر الأطروش',51.5,36.4,'هزم ٣٠ ألفًا بعشرة آلاف قرب بحر قزوين.'],
+['a',317,'القرامطة بمكة',40.1,21.7,'قتل الحجاج واقتلاع الحجر الأسود ٢٢ عامًا.'],
+['a',463,'معركة ملاذكرد',42.5,39.1,'ألب أرسلان السلجوقي ينتصر على الروم ويفتح الأناضول.'],
+['s',492,'سقوط القدس',35.2,31.8,'مجزرة الأقصى (٧٠ ألفًا)، وبقي الاحتلال ٨٨ عامًا.'],
+['s',583,'معركة حطين',35.5,32.8,'صلاح الدين يهزم الصليبيين ويحرر القدس.'],
+['y',569,'الغزو الأيوبي لليمن',43.3,14.2,'حملة توران شاه، ثم طغتكين ومجزرة حصن حب سنة ٥٧٩هـ.'],
+['y',626,'نهاية الأيوبيين',44.2,15.4,'أفشل ابن حمزة ٩ حملات، وقامت الدولة الرسولية.'],
+['s',642,'معركة غزة',34.5,31.5,'الصالح أيوب والخوارزميون يستعيدون القدس.'],
+['s',648,'معركة المنصورة',31.4,31,'هزيمة لويس التاسع وأسره.'],
+['s',656,'سقوط بغداد',44.2,33.5,'اجتياح هولاكو، ومقتل الخليفة ومليون إنسان.'],
+['s',658,'عين جالوت',35.3,32.5,'المماليك يوقفون الزحف المغولي.'],
+['y',698,'نشأة الدولة العثمانية',30,40,'استقل عثمان بإمارته في الأناضول.'],
+['y',857,'فتح القسطنطينية',29,41.1,'محمد الفاتح يُسقط بيزنطة (١٤٥٣م).'],
+['y',1507,'احتلال سقطرى',53.9,12.5,'البرتغاليون يحتلونها، وينسحبون ١٥١١م بفعل المقاومة.',1],
+['y',922,'الصافية والغزو المملوكي',44.2,15.4,'بالبنادق قُتل السلطان عامر بن عبد الوهاب واستُبيحت صنعاء.'],
+['y',923,'ثورة ثلا',43.7,15.8,'يحيى شرف الدين يطرد المماليك، وسقوطهم بمصر في العام نفسه.'],
+['y',1523,'ملحمة الشحر',49.6,14.8,'استشهاد الحاكم و٧ من كبار القادة.',1],
+['y',945,'شنق عامر بن داود',45,12.9,'سليمان باشا الخادم بحملة من ٨٠ سفينة يغدر بسلطان عدن.'],
+['y',1006,'دعوة الإمام القاسم',43.6,15.9,'انطلقت من جبال قارة بحجة.'],
+['y',1045,'التحرير الكامل',43.3,14.4,'اليمن أول قطر عربي يتحرر كليًا من العثمانيين.']
+];
+const S=["-12,50 -4.5,48.5 -1.3,46 -1.8,43.4 -8,43.7 -9.3,43 -9,39 -9,37 -7,37 -5.6,36 -5.9,35.8 -6.8,34 -9.5,31 -10,29.5 -12,28",
+"-5.4,36 -2,36.7 0,38.7 0.5,40.5 3,42 4,43.4 8,44 10,44 12,42 15.8,38 16.5,40 18.5,40.2 16,41.8 13.5,43.6 12.3,45.3 14,44.5 18.5,42 19.5,40.5 21,38.5 22.5,36.5 24,38 23.5,40.2 26,40.6 26.4,39 27,37.5 29,36.6 32,36.2 34,36.6 36,36.8 35.8,34 35.2,32.8 34.5,31.5 32.5,31 29,30.8 25,31.7 23,32.6 20,32 19,30.3 15,32.3 13,32.9 11,33.3 10.5,34 11,37.1 9.8,37.3 8,36.9 3,36.8 0,35.8 -2,35.2 -5,35.5",
+"28.5,41.2 33,42 36,41.7 38,41 41.5,41.5 41.5,43 37.5,44.8 36.5,45.3 35,45 33.5,44.5 32,46 30.5,45.5 28.5,44 28,42.5",
+"49,47 53,45 51,43 52.5,41 53.8,40 53.8,37.5 51,36.7 49,37.5 48.8,39 49.7,40.5 48,42 47.3,44",
+"32.5,30 33.5,28 35.4,24.5 37.2,21 38.6,18 40.2,15.7 42.5,13.3 43.4,12.6 43.3,13.6 42.8,15.5 41.5,17.5 39.5,20.5 37.2,24.5 35.2,27.8 34.4,27.8 33.2,29.2",
+"48.3,30.1 49.5,30 50.8,28.5 52.5,27.4 54.5,26.6 56.3,27.1 57.3,26 58,25.6 57,25.5 56.4,24.7 56,26 55,25.2 53,24.1 51.5,24.4 50.7,25.8 50,27 48.8,28.5 48,29.7",
+"43.4,12.6 45,12.7 49,14.3 52,16 55,17.3 57,19 59.8,22.4 58.5,23.7 56.4,24.7 57,25.5 58,25.6 61,25.2 66,25.3 67,24.8 68.5,23.3 70,21 72.5,21 72.8,19 73.5,16 75,12 75,8 50.8,8 51.2,11.8 48,11.2 45,10.5 43.2,11.8"];
+const L=[['البحر المتوسط',17,35.4],['المحيط الأطلسي',-11,40],['البحر الأسود',32,43.6],['بحر قزوين',50,41.3],['البحر الأحمر',37,19],['بحر العرب',62,17],['الجزيرة العربية',46,22],['مصر',27,27],['المغرب',-5,31]];
+const $=s=>document.querySelector(s),ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const P=(a,b)=>[(a+12)*10,(47-b)*10],yl=e=>ar(e[1])+(e[6]?'م':'هـ');
+const pts=s=>s.split(' ').map(p=>{const[a,b]=p.split(',');return P(+a,+b).join(',')}).join(' ');
+$('#map').innerHTML=`<svg viewBox="0 0 870 390"><rect class="land" width="870" height="390"/>${S.map(s=>`<polygon class="sea" points="${pts(s)}"/>`).join('')}${L.map(l=>{const[x,y]=P(l[1],l[2]);return `<text class="sl" x="${x}" y="${y}">${l[0]}</text>`}).join('')}<defs>${[['ink','var(--ink)'],['red','#e11d48'],...Object.entries(G).map(([k,v])=>[k,v[1]])].map(([i,c])=>`<marker id="a${i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:${c}"/></marker>`).join('')}</defs><g id="rt"></g><text class="sl" x="14" y="26">↑ شمال</text>${E.map((e,i)=>{const[x,y]=P(e[3],e[4]);return `<g class="m" data-i="${i}" transform="translate(${x} ${y})"><circle r="6" fill="${G[e[0]][1]}"/><title>${e[2]}</title></g>`}).join('')}<circle id="ring" class="ring" r="7"/><text id="lb" class="lbl"></text></svg>`;
+$('#chips').innerHTML=Object.entries(G).map(([k,v])=>`<button class="chip on" data-k="${k}" style="--c:${v[1]}">${v[0]}</button>`).join('');
+$('#tl').innerHTML=E.map((e,i)=>`<button class="n" data-i="${i}" style="--c:${G[e[0]][1]}"><b>${yl(e)}</b><i></i><span>${e[2]}</span></button>`).join('');
+let on=new Set(Object.keys(G)),cur=0,timer=null;
+const vis=()=>E.map((_,i)=>i).filter(i=>on.has(E[i][0]));
+function sel(i,sc=true){cur=i;const e=E[i],c=G[e[0]][1],[x,y]=P(e[3],e[4]),r=$('#ring'),lb=$('#lb');
+document.querySelectorAll('.n').forEach(n=>n.classList.toggle('sel',+n.dataset.i===i));
+r.setAttribute('cx',x);r.setAttribute('cy',y);r.style.stroke=c;
+lb.setAttribute('x',x>650?x-12:x+12);lb.setAttribute('y',Math.max(y-10,16));lb.setAttribute('text-anchor',x>650?'end':'start');lb.textContent=yl(e)+' · '+e[2];
+card2(i);route(i);
+if(sc)document.querySelector(`.n[data-i="${i}"]`).scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}
+const D=[
+['١١هـ؛ خلافة أبي بكر ١١–١٣هـ','أبو بكر الصديق،مسيلمة الكذاب،سجاح،مالك بن نويرة'],
+['١٣هـ؛ ضد الروم','أبو بكر (توفي)،عمر (استُخلف)'],
+['١٤هـ؛ خلافة عمر ١٣–٢٣هـ','عمر بن الخطاب'],
+['٣٤هـ؛ خلافة عثمان ٢٣–٣٥هـ','عثمان بن عفان'],
+['٣٧هـ؛ نهايتها بالتحكيم','الإمام علي،معاوية،عمار بن ياسر،عمرو بن العاص'],
+['٤٠هـ؛ ضُرب ليلة ١٩ رمضان؛ استشهد ليلة ٢١ رمضان','الإمام علي،عبد الرحمن بن ملجم'],
+['٤١–١٣٢هـ؛ ٦ سياسات كبرى','معاوية بن أبي سفيان،الحسن بن علي'],
+['١٠ محرم ٦١هـ؛ ٥ نتائج للثورة','الإمام الحسين،يزيد،عبيد الله بن زياد'],
+['٧٣هـ؛ ٦ أشهر حصار؛ الحرة ٦٣هـ','الحجاج بن يوسف،عبد الملك بن مروان،ابن الزبير'],
+['١٢٢هـ؛ ٣٠٠ مجاهد','الإمام زيد،هشام بن عبد الملك،أبو حنيفة'],
+['١٣٢هـ؛ نهاية الأموية','أبو العباس السفاح،أبو مسلم الخراساني'],
+['١٤٥هـ؛ ٣ أسس للثورة','محمد النفس الزكية،أبو جعفر المنصور'],
+['١٦٩هـ؛ جثث معلقة يوم عرفة','الحسين الفخي،يحيى بن عبد الله،إدريس'],
+['١٧٢هـ؛ ٥ نتائج حضارية','إدريس بن عبد الله،يحيى (أخوه)'],
+['٢٨٤هـ؛ يأتي بدعوة من مشايخ اليمن','الإمام الهادي (يحيى بن الحسين)'],
+['٣٠١هـ؛ ٣٠ ألفًا مقابل ١٠ آلاف؛ مئات الآلاف أسلموا','الناصر الأطروش'],
+['٣١٧هـ؛ ٢٢ عامًا بقي الحجر الأسود في هجر','أبو طاهر القرمطي،الناصر بن الهادي'],
+['٤٦٣هـ؛ السلاجقة ٤٣٢–٥٥٢هـ','ألب أرسلان،طغرل بك،ملك شاه'],
+['٤٩٢هـ؛ حصار ٤٠ يومًا؛ ٧٠ ألف شهيد؛ ٨٨ عامًا احتلال','البابا أوربان'],
+['٥٨٣هـ؛ صلح الرملة ٥٨٨هـ؛ وفاته ٥٨٩هـ','صلاح الدين،نور الدين زنكي،عماد الدين زنكي'],
+['٥٦٩هـ و٥٧٩هـ؛ أكثر من ٢٠٠٠ شهيد في حصن حب','توران شاه،طغتكين،عبد النبي الرعيني'],
+['٦٢٦هـ؛ ٩ حملات أُفشلت؛ وفاة ابن حمزة ٦١٤هـ','الإمام عبد الله بن حمزة،عمر بن علي بن رسول'],
+['٦٤٢هـ؛ حطين الثانية','الصالح أيوب،الخوارزميون،الملك الكامل'],
+['٦٤٨هـ؛ الحملة السابعة','لويس التاسع'],
+['٦٥٦هـ؛ جيش ٢٠ ألفًا فقط؛ مليون قتيل؛ دمشق ٦٥٨هـ','هولاكو،الخليفة المستعصم'],
+['٦٥٨هـ؛ طرد الصليبيين نهائيًا ٦٩٠هـ','قطز،بيبرس'],
+['٦٩٨هـ','أرطغرل،عثمان'],
+['٨٥٧هـ / ١٤٥٣م؛ مرج دابق ٩٢٢هـ؛ الريدانية ٩٢٣هـ','السلطان محمد الفاتح'],
+['١٥٠٧م؛ انسحاب ١٥١١م؛ عدن ١٥١٣م: ٢٠ سفينة و١٧٠٠ جندي','ألبوكيرك'],
+['٩٢٢هـ؛ استخدام البنادق','عامر بن عبد الوهاب،المماليك'],
+['٩٢٣هـ؛ سقوط المماليك بمصر','الإمام يحيى شرف الدين'],
+['١٥٢٣م؛ ٧ شهداء','الشهداء السبعة'],
+['٩٤٥هـ / ١٥٣٨م؛ ٨٠ سفينة؛ ٢٠ ألف جندي؛ ٣ أيام','سليمان باشا الخادم،عامر بن داود'],
+['١٠٠٦هـ؛ قبله المطهر: +٤٠ معركة','الإمام القاسم بن محمد،المطهر بن يحيى'],
+['١٠٤٥هـ / ١٦٣٥م؛ ٤٠٠٠ جندي اختاروا البقاء','المؤيد بن القاسم']];
+const X={10:[[59.5,36.3,'خراسان'],[44.4,33.3,'العراق']],13:[[39.7,21.2,'فخ'],[32.3,29.8,'مصر'],[20,29.3],[10,32.8],[-5,34,'فاس']],18:[[38.8,37.2,'الرها'],[36.2,36.2,'أنطاكية'],[36.7,35.6,'معرة النعمان'],[35.2,31.8,'القدس']],20:[[31.2,30,'القاهرة'],[35.2,28.5],[39.8,21.4,'مكة'],[43.3,14.2,'زبيد']],24:[[44.2,33.5,'بغداد'],[36.3,33.5,'دمشق']],25:[[31.2,30,'القاهرة'],[35.3,32.5,'عين جالوت']],32:[[32.5,30,'السويس'],[36,24],[41,17],[43.4,12.6,'باب المندب'],[45,12.9,'عدن']]};
+const dirs=['شرقًا','شمالًا شرقيًا','شمالًا','شمالًا غربيًا','غربًا','جنوبًا غربيًا','جنوبًا','جنوبًا شرقيًا'];
+let showAll=true;
+const dd=(a,b)=>dirs[(Math.round(Math.atan2(b[1]-a[1],b[0]-a[0])/(Math.PI/4))+8)%8];
+const pills=(s,sp)=>s.split(sp).map(x=>`<span class="pill">${x.trim()}</span>`).join('');
+function seg(a,b,cls,mk,k,col){const dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy);if(d<12)return '';
+const mx=(a[0]+b[0])/2-dy*k,my=(a[1]+b[1])/2+dx*k,ex=b[0]-dx/d*9,ey=b[1]-dy/d*9;
+return `<path class="rt ${cls}" ${cls=='rf'?'':'pathLength="1"'} marker-end="url(#a${mk})" ${col?`style="stroke:${col}"`:''} d="M${a}Q${mx},${my} ${ex},${ey}"/>`}
+function route(i){const v=vis(),k=v.indexOf(i),pt=j=>P(E[j][3],E[j][4]);let h='';
+if(showAll)for(let n=1;n<v.length;n++)h+=seg(pt(v[n-1]),pt(v[n]),'rf','ink',.18);
+const x=X[i];
+if(x){const c=E[i][0],w=x.map(q=>P(q[0],q[1]));for(let n=1;n<w.length;n++)h+=seg(w[n-1],w[n],'rx',c,0,G[c][1]);
+x.forEach((q,n)=>{if(q[2])h+=`<circle cx="${w[n][0]}" cy="${w[n][1]}" r="3.5" style="fill:${G[c][1]}"/><text class="wp" x="${w[n][0]+6}" y="${w[n][1]+14}">${q[2]}</text>`})}
+else if(k>0)h+=seg(pt(v[k-1]),pt(i),'rh','red',.18);
+$('#rt').innerHTML=h}
+function card2(i){const e=E[i],c=G[e[0]][1],v=vis(),k=v.indexOf(i),d=D[i],x=X[i];let t='';
+if(x){const a=x[0],b=x[x.length-1];t='مسار الحدث: '+x.filter(q=>q[2]).map(q=>q[2]).join(' ← ')+' (الاتجاه العام '+dd(a,b)+')'}
+else if(k>0){const p=E[v[k-1]];t='الانتقال من «'+p[2]+'» إلى هنا: '+(Math.hypot(e[3]-p[3],e[4]-p[4])<1.2?'في المنطقة نفسها تقريبًا':dd([p[3],p[4]],[e[3],e[4]]))}
+const cd=$('#card');cd.style.setProperty('--c',c);
+cd.innerHTML=`<div class="y">${G[e[0]][0]} · ${yl(e)} · الحدث ${ar(k+1)} من ${ar(v.length)}</div><div class="t">${e[2]}</div><p>${e[5]}</p><div class="k">الأرقام</div>${pills(d[0],'؛')}<div class="k">الشخصيات</div>${pills(d[1],'،')}${t?`<div class="dir">🧭 ${t}</div>`:''}`}
+function go(d){const v=vis(),k=v.indexOf(cur);sel(v[(k+d+v.length)%v.length])}
+function draw(){document.querySelectorAll('.n,.m').forEach(n=>n.style.display=on.has(E[n.dataset.i][0])?'':'none');
+document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',on.has(c.dataset.k)));
+if(!on.has(E[cur][0]))sel(vis()[0]);else{route(cur);card2(cur)}}
+$('#chips').onclick=e=>{const k=e.target.dataset.k;if(!k)return;on.has(k)?(on.size>1&&on.delete(k)):on.add(k);draw()};
+$('#tl').onclick=e=>{const n=e.target.closest('.n');if(n)sel(+n.dataset.i)};
+$('#map').onclick=e=>{const m=e.target.closest('.m');if(m)sel(+m.dataset.i)};
+$('#nx').onclick=()=>go(1);$('#pv').onclick=()=>go(-1);
+$('#pl').onclick=()=>{if(timer){clearInterval(timer);timer=null;$('#pl').textContent='▶ تشغيل تلقائي'}else{$('#pl').textContent='⏸ إيقاف';timer=setInterval(()=>go(1),3500)}};
+document.onkeydown=e=>{if(e.key==='ArrowLeft')go(1);if(e.key==='ArrowRight')go(-1)};
+$('#ra').onclick=()=>{showAll=!showAll;$('#ra').textContent='المسار العام: '+(showAll?'تشغيل':'إيقاف');route(cur)};
+sel(0,false);
+</script>
+</body>
+</html>
